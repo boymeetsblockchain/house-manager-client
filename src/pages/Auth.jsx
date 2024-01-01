@@ -1,8 +1,12 @@
 import { useCallback, useState } from 'react'
 import Home from '../assets/home4.png'
 import axios from 'axios'
+import {API} from '../data/api'
+import { useNavigate } from 'react-router-dom'
 import Input from '../components/Input'
+import { toast } from 'react-toastify'
 const Auth = () => {
+  const navigate= useNavigate()
     const [variant, setVariant] = useState('login');
     const [username,setUsername]= useState("")
     const [password,setPassword]= useState("")
@@ -15,17 +19,30 @@ const Auth = () => {
      
       const registerUser=async(e)=>{
         e.preventDefault()
-
-         const formData= {email,username,password}
-          const response=await axios.post("http://localhost:5000/api/users/register",formData, {withCredentials:true})
-          console.log(response.data)
+     try {
+      const formData= {email,username,password}
+      const response=await axios.post(`${API}users/register`,formData, {withCredentials:true})
+      toast.success("Successfully registered")
+      navigate('/dashboard')
+     } catch (error) {
+       console.log(error)
+       toast.error("something went wrong")
+     }
+    
       }
 
       const loginUser= async(e)=>{
         e.preventDefault()
-        const formData= {email,password}
-        const response=await axios.post("http://localhost:5000/api/users/login",formData, {withCredentials:true})
-        console.log(response.data)
+        try {
+           const formData= {email,password}
+        const response=await axios.post(`${API}users/login`,formData, {withCredentials:true})
+        toast.success("succesfully logged in")
+        navigate('/dashboard')
+        } catch (error) {
+          console.log(error)
+          toast.error("something went wrong")
+        }
+        
       }
   return (
     <div className="mx-auto max-w-screen-xl h-full w-full px-4 md:px-8 lg:px-12">

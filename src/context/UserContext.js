@@ -17,7 +17,6 @@ export const UserContextProvider=({children})=>{
      finduser()
     },[])
     const [user,setUser]= useState({})
-    console.log(user)
 
     return <UserContext.Provider value={{user,setUser}}>
         {children}
