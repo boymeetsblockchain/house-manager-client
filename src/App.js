@@ -6,6 +6,7 @@ import Tenant from "./pages/Tenant"
 import { ToastContainer } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
 import AddNewTenant from "./pages/AddNewTenant";
+import TenantDetails from "./pages/TenantDetails"
 export default function App() {
   return (
   <>
@@ -16,6 +17,7 @@ export default function App() {
         <Route path="/tenant">
           <Route  path="" element={<Tenant/>}/>
           <Route path="add" element={<AddNewTenant/>}/>
+          <Route path=":id" element={<TenantDetails/>}/>
         </Route>
       </Routes>
       <ToastContainer/>
