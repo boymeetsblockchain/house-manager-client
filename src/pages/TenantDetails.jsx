@@ -1,7 +1,7 @@
 import { API } from "../data/api";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { formatDate } from "../hooks/dateFormat";
 
 const TenantDetails = () => {
@@ -12,7 +12,6 @@ const TenantDetails = () => {
     const fetchTenant = async () => {
       try {
         const response = await axios.get(`${API}tenant/${id}`);
-        console.log(response.data);
         setTenant(response.data);
       } catch (error) {
         console.log(error);
@@ -24,9 +23,19 @@ const TenantDetails = () => {
 
   return (
     <div className="mx-auto max-w-screen-xl text-gray-900 h-full w-full px-4 md:px-8 lg:px-12">
-      <h1 className="text-left text-3xl font-bold my-10">
+    <div className="flex justify-between items-center">
+    <div>
+     <h1 className="text-left text-3xl font-bold my-10">
        {tenant?.name}
       </h1>
+     </div>
+      <div className="flex text-center">
+       <Link to={`/tenant/update/${id}`} 
+        className='bg-[#567DF4] py-3 text-white  px-4 text-sm rounded-md w-full mt-4 hover:bg-[#22215B] transition'>
+         Update
+      </Link>
+       </div>
+    </div>
       <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-blue-200 p-6 md:col-span-2 text-3xl text-left row-span-2 rounded-md shadow-md hover:scale-75 cursor-pointer transition">
           <strong>Address:</strong> {tenant?.address}
