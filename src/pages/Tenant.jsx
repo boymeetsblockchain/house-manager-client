@@ -5,16 +5,14 @@ import UserContext from "../context/UserContext";
 import { useContext } from "react";
 import { Link,useNavigate} from "react-router-dom";
 import { useCallback } from "react";
+import { formatDate } from "../hooks/dateFormat";
 
 const Tenant = () => {
   const [tenants, setTenants] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = useContext(UserContext);
  const navigate= useNavigate()
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
-  };
+ 
 
   useEffect(() => {
     const getTenants = async () => {
@@ -70,7 +68,7 @@ const Tenant = () => {
                 <td className="px-4 text-sm md:text-lg text-left">{index + 1}</td>
                 <td className="px-4 text-sm md:text-lg text-left">{tenant.name}</td>
                 <td className="px-4 text-sm md:text-lg text-left">0{tenant.phonenumber}</td>
-                <td className="px-4 text-sm md:text-lg text-left">{tenant.amount}</td>
+                <td className="px-4 text-sm md:text-lg text-left">&#8358;{tenant.amount}</td>
                 <td className="px-4 text-sm md:text-lg text-left">{formatDate(tenant.rent.rentstart)}</td>
                 <td className="px-4 text-sm md:text-lg text-left">{formatDate(tenant.rent.rentend)}</td>
               </tr>

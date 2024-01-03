@@ -12,7 +12,7 @@ export default function App() {
   <>
     <UserContextProvider>
       <Routes>
-        <Route path="/" index element={<Auth/>}/>
+        <Route path="/" index element={<Auth/>}/> 
         <Route path="/dashboard" index element={<Dashboard/>}/>
         <Route path="/tenant">
           <Route  path="" element={<Tenant/>}/>

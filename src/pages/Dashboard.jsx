@@ -12,6 +12,9 @@ const Dashboard = () => {
         <Link to={'/tenant/add'}>
          Add New Tenant
         </Link>
+        <Link to={'/tenant'}>
+         View Tenants
+        </Link>
     </div>
   )
 }
