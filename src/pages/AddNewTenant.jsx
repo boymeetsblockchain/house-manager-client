@@ -4,8 +4,12 @@ import Select from "../components/Select";
 import {API} from '../data/api'
 import axios from 'axios'
 import{toast} from 'react-toastify'
+import { useNavigate } from "react-router-dom";
+import {Loader} from '../components/Loader'
 import { paymentOptions } from "../data/payment";
 const AddNewTenant = () => {
+  const navigate = useNavigate()
+  const [loading,setLoading]= useState(false)
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -32,19 +36,28 @@ const AddNewTenant = () => {
 
   const addNewTenant= async(e)=>{
     e.preventDefault()
-   
+
     try {
-        const response = axios.post(`${API}tenant/add-tenant`,formData)
-        
+      setLoading(true)
+        const response = await axios.post(`${API}tenant/add-tenant`,formData)
         toast.success("Tenant added")
-        
+        navigate('/dashboard')
         setFormData({})
     } catch (error) {
          console.log(error)
+    }finally{
+      setLoading(false)
     }
   }
+
+
   return (
     <div className="mx-auto max-w-screen-xl h-full py-4 w-full px-4 md:px-8 lg:px-12">
+      <div className="flex justify-start items-center ">
+      <button onClick={()=>navigate(-1)} className="bg-[#567DF4] py-3 my-3 text-white px-4 text-sm rounded-md w-1/4 inline-block hover:bg-[#22215B] transition">
+         Go Back
+        </button>
+      </div>
       <h1 className="text-center font-bold text-3xl mb-4">Add a New Tenant</h1>
       <form className="flex flex-col space-y-4 justify-center w-full mx-auto" onSubmit={addNewTenant}>
         <Input name="name" label="Name" value={formData.name} onChange={handleChange} />
@@ -72,13 +85,15 @@ const AddNewTenant = () => {
          <br />
         
          <h2 className="text-center font-bold text-3xl">Rent Details</h2>
-          <div className="flex space-x-4 justify-around">
+         <div className="flex space-y-2 md:space-x-4 md:flex-row flex-col ">
           <Input name="rentstart" label="Rent Start Date" type="date" value={formData.rentstart} onChange={handleChange} />
         <Input name="rentend" label="Rent End Date" type="date" value={formData.rentend} onChange={handleChange} /> 
           </div>
        <div className="flex justify-end">
        <button className="bg-[#567DF4] py-3 text-white text-sm rounded-md w-1/4 mt-4 hover:bg-[#22215B] transition">
-                Add 
+               {
+                loading ? <Loader/> : "Add"
+               }
         </button>
        </div>
              
