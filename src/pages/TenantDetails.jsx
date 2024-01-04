@@ -87,7 +87,7 @@ const TenantDetails = () => {
      
     </div>
       <div className="md:grid grid-cols-2  flex flex-col md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-blue-200 p-6 md:col-span-2 text-sm  md:text-3xl text-left row-span-2 rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+        <div className="bg-blue-200 p-6  sm: col-span-1 md:col-span-2 text-sm  md:text-3xl text-left row-span-2 rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Address:</strong> {tenant?.address}
         </div>
         <div className="bg-green-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
@@ -102,7 +102,7 @@ const TenantDetails = () => {
         <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Occupation:</strong> {tenant?.occupation}
         </div>
-        <div className="bg-red-200 p-6 md:col-span-3  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+        <div className="bg-red-200 p-6 md:col-span-2  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Employment Address:</strong> {tenant?.employadd}
         </div>
         <div className="bg-slate-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">

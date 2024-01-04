@@ -48,9 +48,8 @@ const Auth = () => {
     } catch (error) {
       console.log(error);
       toast.error('Something went wrong');
-    } finally {
-      setLoading(false);
-    }
+      setLoading(false)
+    } 
   };
 
   return (
@@ -67,7 +66,7 @@ const Auth = () => {
               <Input label={'Password...'} type={'password'} value={password} onChange={(e) => setPassword(e.target.value)} />
               <div className="flex justify-end">
               <button
-  className="bg-[#567DF4] py-3 text-white text-sm rounded-md w-1/4 mt-4 hover:bg-[#22215B] transition relative"
+  className="bg-[#567DF4] py-3 text-white text-sm rounded-md w-1/4 mt-4 text-nowrap hover:bg-[#22215B] transition relative"
   disabled={loading}
 >
   {loading ? (

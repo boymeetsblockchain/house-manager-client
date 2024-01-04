@@ -95,7 +95,7 @@ const UpdateTenant = () => {
         <Input name="address" label="Address" value={formData?.address} onChange={handleChange} />
         <Input name="phonenumber" label="Phone Number" type={'number'} value={formData?.phonenumber} onChange={handleChange} />
         <Input name="amount" label="Amount of Rent " value={formData?.amount} onChange={handleChange} />
-        <div className="flex justify-between space-x-4">
+        <div className="flex justify-between md:flex-row flex-col spce-y-4 md:space-x-4">
           <Input name="occupation" label="Occupation" value={formData?.occupation} onChange={handleChange} />
           <Input name="altphone" label="Alternative Phone" value={formData?.altphone} type={'number'} onChange={handleChange} />
           <Input name="employadd" label="Employment Address" value={formData?.employadd} onChange={handleChange} />

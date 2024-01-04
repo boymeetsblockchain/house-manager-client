@@ -54,7 +54,7 @@ const AddNewTenant = () => {
   return (
     <div className="mx-auto max-w-screen-xl h-full py-4 w-full px-4 md:px-8 lg:px-12">
       <div className="flex justify-start items-center ">
-      <button onClick={()=>navigate(-1)} className="bg-[#567DF4] py-3 my-3 text-white px-4 text-sm rounded-md w-1/4 inline-block hover:bg-[#22215B] transition">
+      <button onClick={()=>navigate(-1)} className="bg-[#567DF4] py-3 my-3 text-white px-4 text-sm text-nowrap rounded-md w-1/4 inline-block hover:bg-[#22215B] transition">
          Go Back
         </button>
       </div>
@@ -64,7 +64,7 @@ const AddNewTenant = () => {
         <Input name="address" label="Address" value={formData.address} onChange={handleChange} />
         <Input name="phonenumber" label="Phone Number" type={'number'} value={formData.phonenumber} onChange={handleChange} />
         <Input name="amount" label="Amount of Rent " value={formData.amount} onChange={handleChange} />
-          <div className="flex justify-between space-x-4">
+          <div className="flex justify-between  md:flex-row flex-col space-y-4 md:space-x-4">
           <Input name="occupation" label="Occupation" value={formData.occupation} onChange={handleChange} />
         <Input name="altphone" label="Alternative Phone" value={formData.altphone} type={'number'}  onChange={handleChange} />
         <Input name="employadd" label="Employment Address" value={formData.employadd} onChange={handleChange} />
