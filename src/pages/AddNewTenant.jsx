@@ -24,6 +24,8 @@ const AddNewTenant = () => {
     guarantornumber: "",
     rentstart: "",
     rentend: "",
+    apartmentLocation:"",
+    source:""
   });
 
   const handleChange = (e) => {
@@ -41,7 +43,7 @@ const AddNewTenant = () => {
       setLoading(true)
         const response = await axios.post(`${API}tenant/add-tenant`,formData)
         toast.success("Tenant added")
-        navigate('/dashboard')
+        navigate('/tenant')
         setFormData({})
     } catch (error) {
          console.log(error)
@@ -64,6 +66,8 @@ const AddNewTenant = () => {
         <Input name="address" label="Address" value={formData.address} onChange={handleChange} />
         <Input name="phonenumber" label="Phone Number" type={'number'} value={formData.phonenumber} onChange={handleChange} />
         <Input name="amount" label="Amount of Rent " value={formData.amount} onChange={handleChange} />
+        <Input name="source" label="Source of Tenant" value={formData.source} onChange={handleChange} />
+          <Input name="apartmentLocation" label="Apartment Location" value={formData.apartmentLocation} onChange={handleChange} />
           <div className="flex justify-between  md:flex-row flex-col space-y-4 md:space-x-4">
           <Input name="occupation" label="Occupation" value={formData.occupation} onChange={handleChange} />
         <Input name="altphone" label="Alternative Phone" value={formData.altphone} type={'number'}  onChange={handleChange} />

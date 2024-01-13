@@ -14,6 +14,7 @@ const TenantDetails = () => {
     const fetchTenant = async () => {
       try {
         const response = await axios.get(`${API}tenant/${id}`);
+        console.log(response.data)
         setTenant(response.data);
       } catch (error) {
         console.log(error);
@@ -40,18 +41,29 @@ const TenantDetails = () => {
         setCountdownTime("N/A");
         return;
       }
-
+    
       const rentDueDate = new Date(tenant.rent.rentend).getTime();
       const currentDate = new Date().getTime();
-      const timeDifference = rentDueDate - currentDate;
-
-      // Calculate days, hours, minutes, and seconds
-      const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-      setCountdownTime(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      
+      if (currentDate >= rentDueDate) {
+        // Rent has expired
+        setCountdownTime("Rent Expired");
+      } else {
+        const timeDifference = rentDueDate - currentDate;
+    
+        // Calculate days, hours, minutes, and seconds
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+        
+        setCountdownTime(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+      }
     };
+    
+    // Usage example
+    updateCountdownTime();
+    
 
     const intervalId = setInterval(updateCountdownTime, 1000);
 
@@ -60,7 +72,7 @@ const TenantDetails = () => {
   }, [tenant]);
 
   return (
-    <div className="mx-auto max-w-screen-xl text-gray-900 h-full w-full px-4 md:px-8 lg:px-12">
+    <div className="mx-auto max-w-screen-xl text-gray-900 h-full w-full px-4 py-6 md:px-8 lg:px-12">
         <div className="flex justify-start items-center mt-4  ">
       <button onClick={()=>navigate(-1)} className="bg-slate-400 py-3 text-white px-4 text-sm rounded-md w-1/8 inline-block hover:bg-[#22215B] transition">
          Go Back
@@ -99,6 +111,12 @@ const TenantDetails = () => {
         <div className="bg-pink-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Alt Phone Number:</strong> 0{tenant?.altphone}
         </div>
+        <div className="bg-orange-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Apartment Location:</strong> {tenant?.apartmentLocation}
+        </div>
+        <div className="bg-red-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Source of Tenant:</strong> {tenant?.source}
+        </div>
         <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Occupation:</strong> {tenant?.occupation}
         </div>
@@ -108,10 +126,10 @@ const TenantDetails = () => {
         <div className="bg-slate-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Mode of Payment:</strong> {tenant?.paymentmethod}
         </div>
-        <div className="bg-yellow-200 p-6 md:col-span-2  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+        <div className="bg-yellow-200 p-6 md:col-span-3 text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Rent paid on:</strong> {formatDate(tenant?.rent?.rentstart)}
         </div>
-        <div className="bg-blue-200 p-6 md:col-span-2  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+        <div className="bg-blue-200 p-6 md:col-span-4  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Rent due on:</strong> {formatDate(tenant?.rent?.rentend)}
         </div>
     
