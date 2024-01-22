@@ -5,17 +5,19 @@ import { Link, useParams } from "react-router-dom";
 import { formatDate } from "../hooks/dateFormat";
 import { useNavigate } from "react-router-dom";
 
+import Input from "../components/Input";
 const TenantDetails = () => {
   const [tenant, setTenant] = useState(null);
   const [countdownTime, setCountdownTime] = useState("N/A");
+ 
   const { id } = useParams();
    const navigate = useNavigate()
   useEffect(() => {
     const fetchTenant = async () => {
       try {
         const response = await axios.get(`${API}tenant/${id}`);
-        console.log(response.data)
         setTenant(response.data);
+        console.log(response.data)
       } catch (error) {
         console.log(error);
       }
@@ -24,16 +26,25 @@ const TenantDetails = () => {
     fetchTenant();
   }, [id]);
 
-  const deleteTenant = async()=>{
+  const deleteTenant = async () => {
     try {
-      const response = await axios.delete(`${API}tenant/${id}`);
-      if(response.status===200){
-        navigate(-1)
+ 
+      const userConfirmed = window.confirm("Are you sure you want to delete this tenant?");
+      if (userConfirmed) {
+        const response = await axios.delete(`${API}tenant/${id}`);
+        
+        if (response.status === 200) {
+          navigate(-1);
+        }
+      } else {
+
+        console.log("Deletion canceled by the user");
       }
     } catch (error) {
-       console.log(error)
+      console.log(error);
     }
   }
+  
  
   useEffect(() => {
     const updateCountdownTime = () => {
@@ -72,7 +83,7 @@ const TenantDetails = () => {
   }, [tenant]);
 
   return (
-    <div className="mx-auto max-w-screen-xl text-gray-900 h-full w-full px-4 py-6 md:px-8 lg:px-12">
+    <div className="mx-auto max-w-screen-xl text-gray-900 h-full w-full px-4 py-12 md:px-8 lg:px-12">
         <div className="flex justify-start items-center mt-4  ">
       <button onClick={()=>navigate(-1)} className="bg-slate-400 py-3 text-white px-4 text-sm rounded-md w-1/8 inline-block hover:bg-[#22215B] transition">
          Go Back
@@ -84,6 +95,7 @@ const TenantDetails = () => {
        {tenant?.name}
       </h1>
      </div>
+   
      <div className="flex justify-between items-center  mb-4 md:mb-0 text-center space-x-4">
   <Link to={`/tenant/update/${id}`} className="bg-[#567DF4] py-3 text-white px-4 text-sm rounded-md w-full hover:bg-[#22215B] transition">
     Update
@@ -101,6 +113,7 @@ const TenantDetails = () => {
       <div className="md:grid grid-cols-2  flex flex-col md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-blue-200 p-6  sm: col-span-1 md:col-span-2 text-sm  md:text-3xl text-left row-span-2 rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Address:</strong> {tenant?.address}
+          {tenant?.imag}
         </div>
         <div className="bg-green-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Amount Paid:</strong> &#8358;{tenant?.amount}
@@ -132,6 +145,9 @@ const TenantDetails = () => {
         <div className="bg-blue-200 p-6 md:col-span-4  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Rent due on:</strong> {formatDate(tenant?.rent?.rentend)}
         </div>
+        <div className="bg-violet-300 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Rent Duration in Months</strong> {tenant?.duration}
+        </div>
     
         <div className="bg-slate-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Guarantor Name:</strong> {tenant?.guarantor?.guarantorname}
@@ -142,8 +158,12 @@ const TenantDetails = () => {
         <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Guarantor Number:</strong> 0{tenant?.guarantor?.guarantornumber}
         </div>
-        
+         
       </div>
+      <div className="flex justify-center flex-col mt-4 ">
+          <label htmlFor="Receipt" className="text-3xl font-bold">Receipt:</label>
+          <img src={tenant?.imageUrl} alt={tenant?.name}  className="object-contain max-w-xl "/>
+         </div>
     </div>
   );
 };
