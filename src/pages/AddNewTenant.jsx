@@ -101,7 +101,7 @@ const AddNewTenant = () => {
       <h1 className="text-center font-bold text-3xl mb-4">Add a New Tenant</h1>
       <div className="flex space-x-4 mb-8">
       <Input type={'file'} onChange={handleFileChange}/>
-          <button onClick={uploadImageToFirebaseStorage} className="text-bold  bg-green-500  text-white  rounded-md px-3 py-1.5">Upload Image</button>
+          <button onClick={uploadImageToFirebaseStorage} className="text-bold  bg-green-500  text-white  rounded-md px-3 py-1.5">Upload Receipt</button>
       </div>
       <form className="flex flex-col space-y-4 justify-center w-full mx-auto" onSubmit={addNewTenant}>
         <Input name="name" label="Name" value={formData.name} onChange={handleChange} />
@@ -146,7 +146,7 @@ const AddNewTenant = () => {
     
           <Input name="rentstart" label="Rent Start Date" type="date" value={formData.rentstart} onChange={handleChange} />
         <Input name="rentend" label="Rent End Date" type="date" value={formData.rentend} onChange={handleChange} /> 
-        <Input name="duration" label="Rent Duration" type="number" value={formData.duration} onChange={handleChange} /> 
+        <Input name="duration" label="Rent Duration" type="text" value={formData.duration} onChange={handleChange} /> 
           </div>
           {imageUrl && (
         <div>

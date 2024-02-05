@@ -146,7 +146,7 @@ const TenantDetails = () => {
           <strong>Rent due on:</strong> {formatDate(tenant?.rent?.rentend)}
         </div>
         <div className="bg-violet-300 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
-          <strong>Rent Duration in Months</strong> {tenant?.duration}
+          <strong>Rent Duration :</strong> {tenant?.duration}
         </div>
     
         <div className="bg-slate-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
