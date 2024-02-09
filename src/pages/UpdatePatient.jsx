@@ -7,11 +7,15 @@ import { toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from '../components/Loader';
 import { paymentOptions } from "../data/payment";
+import { storage } from "../firebase.config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const UpdateTenant = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -26,6 +30,7 @@ const UpdateTenant = () => {
     guarantornumber: "",
     rentstart: "",
     rentend: "",
+    imageUrl:""
   });
 
   useEffect(() => {
@@ -49,14 +54,38 @@ const UpdateTenant = () => {
     }));
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedFile(file);
+  };
+  const uploadImageToFirebaseStorage = async () => {
+
+    try {
+      if (!selectedFile) {
+        console.error("No file selected for upload");
+        return;
+      }
+
+      const storage = getStorage();
+      const storageRef = ref(storage, `images/${selectedFile.name}`);
+      const snapshot = await uploadBytes(storageRef, selectedFile);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      setImageUrl(downloadURL);
+      console.log(downloadURL)
+    } catch (error) {
+      console.error("Error uploading image to Firebase Storage:", error);
+    }
+  };
+ 
   const updateTenant = async (e) => {
     e.preventDefault();
 
     try {
       setLoading(true);
-      const response = await axios.post(`${API}tenant/${id}`, formData);
+      const newFormData= {...formData, imageUrl}
+      const response = await axios.post(`${API}tenant/${id}`, newFormData);
       toast.success("Tenant updated");
-      navigate('/dashboard');
+      navigate('/tenant');
     } catch (error) {
       console.log(error);
       toast.error("Something went wrong");
@@ -90,6 +119,10 @@ const UpdateTenant = () => {
         </button>
       </div>
       <h1 className="text-center font-bold text-3xl mb-4">Update Tenant</h1>
+      <div className="flex space-x-4 mb-8">
+      <Input type={'file'} onChange={handleFileChange}/>
+          <button onClick={uploadImageToFirebaseStorage} className="text-bold  bg-green-500  text-white  rounded-md px-3 py-1.5">Upload Receipt</button>
+      </div>
       <form className="flex flex-col space-y-4 justify-center w-full mx-auto" onSubmit={updateTenant}>
         <Input name="name" label="Name" value={formData?.name} onChange={handleChange} />
         <Input name="address" label="Address" value={formData?.address} onChange={handleChange} />
@@ -119,6 +152,12 @@ const UpdateTenant = () => {
           <Input name="rentstart" label="Rent Start Date" type="date" value={formatDateForInput(formData?.rent?.rentstart)} onChange={handleChange} />
           <Input name="rentend" label="Rent End Date" type="date" value={formatDateForInput(formData?.rent?.rentend)} onChange={handleChange} />
         </div>
+        {imageUrl && (
+        <div>
+          <p>Receipt Preview:</p>
+          <img src={imageUrl} alt="Uploaded"/>
+        </div>
+      )}
         <div className="flex justify-end">
           <button className="bg-[#567DF4] py-3 text-white text-sm rounded-md w-1/4 mt-4 hover:bg-[#22215B] transition">
             {loading ? <Loader /> : "Update"}
