@@ -6,7 +6,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from '../components/Loader';
-import { paymentOptions } from "../data/payment";
+import { paymentOptions, paymentType } from "../data/payment";
 import { storage } from "../firebase.config";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
@@ -30,7 +30,8 @@ const UpdateTenant = () => {
     guarantornumber: "",
     rentstart: "",
     rentend: "",
-    imageUrl:""
+    imageUrl:"",
+    comment:""
   });
 
   useEffect(() => {
@@ -128,6 +129,14 @@ const UpdateTenant = () => {
         <Input name="address" label="Address" value={formData?.address} onChange={handleChange} />
         <Input name="phonenumber" label="Phone Number" type={'number'} value={formData?.phonenumber} onChange={handleChange} />
         <Input name="amount" label="Amount of Rent " value={formData?.amount} onChange={handleChange} />
+        <Select
+  id="selectInput"
+  name={"paymenttype"}
+  value={formData.paymenttype}
+  onChange={handleChange}
+  label="Payment Type"
+  options={paymentType}
+/>
         <div className="flex justify-between md:flex-row flex-col spce-y-4 md:space-x-4">
           <Input name="occupation" label="Occupation" value={formData?.occupation} onChange={handleChange} />
           <Input name="altphone" label="Alternative Phone" value={formData?.altphone} type={'number'} onChange={handleChange} />
@@ -152,6 +161,7 @@ const UpdateTenant = () => {
           <Input name="rentstart" label="Rent Start Date" type="date" value={formatDateForInput(formData?.rent?.rentstart)} onChange={handleChange} />
           <Input name="rentend" label="Rent End Date" type="date" value={formatDateForInput(formData?.rent?.rentend)} onChange={handleChange} />
         </div>
+        <Input name="comment" label="Comment" value={formData.comment} onChange={handleChange} />
         {imageUrl && (
         <div>
           <p>Receipt Preview:</p>

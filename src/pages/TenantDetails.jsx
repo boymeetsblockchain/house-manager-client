@@ -139,7 +139,10 @@ const TenantDetails = () => {
         <div className="bg-slate-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Mode of Payment:</strong> {tenant?.paymentmethod}
         </div>
-        <div className="bg-yellow-200 p-6 md:col-span-3 text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+        <div className="bg-blue-400 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Payment Type:</strong> {tenant?.paymenttype}
+        </div>
+        <div className="bg-yellow-200 p-6 md:col-span-2 text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Rent paid on:</strong> {formatDate(tenant?.rent?.rentstart)}
         </div>
         <div className="bg-blue-200 p-6 md:col-span-4  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
@@ -158,6 +161,12 @@ const TenantDetails = () => {
         <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Guarantor Number:</strong> 0{tenant?.guarantor?.guarantornumber}
         </div>
+        <div className="bg-pink-300 p-6 col-span-3  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Comment:</strong> {
+            tenant?.comment
+          }
+        </div>
+         
          
       </div>
       <div className="flex justify-center flex-col mt-4 ">

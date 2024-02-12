@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import {Loader} from '../components/Loader'
 import { storage } from "../firebase.config";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { paymentOptions } from "../data/payment";
+import { paymentOptions,paymentType} from "../data/payment";
 const AddNewTenant = () => {
   const navigate = useNavigate()
  
@@ -57,6 +57,7 @@ const AddNewTenant = () => {
     rentend: "",
     apartmentLocation:"",
     source:"",
+    comment:"",
   });
 
   const handleCautionFeeChange = (e) => {
@@ -108,6 +109,14 @@ const AddNewTenant = () => {
         <Input name="address" label="Address" value={formData.address} onChange={handleChange} />
         <Input name="phonenumber" label="Phone Number" type={'number'} value={formData.phonenumber} onChange={handleChange} />
         <Input name="amount" label="Amount of Rent " value={formData.amount} onChange={handleChange} />
+        <Select
+  id="selectInput"
+  name={"paymenttype"}
+  value={formData.paymentType}
+  onChange={handleChange}
+  label="Payment Type"
+  options={paymentType}
+/>
         <Input name="source" label="Source of Tenant" value={formData.source} onChange={handleChange} />
           <Input name="apartmentLocation" label="Apartment Location" value={formData.apartmentLocation} onChange={handleChange} />
           <div className="flex justify-between  md:flex-row flex-col space-y-4 md:space-x-4">
@@ -148,6 +157,7 @@ const AddNewTenant = () => {
         <Input name="rentend" label="Rent End Date" type="date" value={formData.rentend} onChange={handleChange} /> 
         <Input name="duration" label="Rent Duration" type="text" value={formData.duration} onChange={handleChange} /> 
           </div>
+          <Input name="comment" label="Comment" value={formData.comment} onChange={handleChange} />
           {imageUrl && (
         <div>
           <p>Receipt Preview:</p>
