@@ -9,6 +9,6 @@ export const paymentOptions = [
 export const paymentType =[
     { value: '', label: 'Select Payment Type' },
     { value: 'Paid in Full', label: 'Paid in Full' },
-    { value: 'Subsequent', label: 'Subsequent' },
+    { value: 'Installment', label: 'Installment' },
     
 ]
