@@ -47,8 +47,10 @@ const AddNewTenant = () => {
     amount: "",
     occupation: "",
     altphone: "",
+    altphonetwo: "",
     employadd: "",
     paymentmethod: "",
+    paymenttype: "",
     duration:"",
     guarantorname: "",
     guarantoraddress: "",
@@ -112,7 +114,7 @@ const AddNewTenant = () => {
         <Select
   id="selectInput"
   name={"paymenttype"}
-  value={formData.paymentType}
+  value={formData.paymenttype}
   onChange={handleChange}
   label="Payment Type"
   options={paymentType}
@@ -121,7 +123,8 @@ const AddNewTenant = () => {
           <Input name="apartmentLocation" label="Apartment Location" value={formData.apartmentLocation} onChange={handleChange} />
           <div className="flex justify-between  md:flex-row flex-col space-y-4 md:space-x-4">
           <Input name="occupation" label="Occupation" value={formData.occupation} onChange={handleChange} />
-        <Input name="altphone" label="Alternative Phone" value={formData.altphone} type={'number'}  onChange={handleChange} />
+        <Input name="altphone" label="Alternative Phone" value={formData.altphone} type={'number'}  onChange={handleChange} /> 
+        <Input name="altphonetwo" label="Alternative Phone 2" value={formData.altphonetwo} type={'number'}  onChange={handleChange} /> 
         <Input name="employadd" label="Employment Address" value={formData.employadd} onChange={handleChange} />
           <div className="flex items-center space-x-2">
         <input

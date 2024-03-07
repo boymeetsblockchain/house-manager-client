@@ -23,6 +23,7 @@ const UpdateTenant = () => {
     amount: "",
     occupation: "",
     altphone: "",
+    altphonetwo: "",
     employadd: "",
     paymentmethod: "",
     guarantorname: "",
@@ -33,7 +34,6 @@ const UpdateTenant = () => {
     imageUrl:"",
     comment:""
   });
-
   useEffect(() => {
     const fetchTenant = async () => {
       try {
@@ -140,6 +140,7 @@ const UpdateTenant = () => {
         <div className="flex justify-between md:flex-row flex-col spce-y-4 md:space-x-4">
           <Input name="occupation" label="Occupation" value={formData?.occupation} onChange={handleChange} />
           <Input name="altphone" label="Alternative Phone" value={formData?.altphone} type={'number'} onChange={handleChange} />
+          <Input name="altphonetwo" label="Alternative Phone two" value={formData?.altphonetwo} type={'number'} onChange={handleChange} />
           <Input name="employadd" label="Employment Address" value={formData?.employadd} onChange={handleChange} />
         </div>
         <Select

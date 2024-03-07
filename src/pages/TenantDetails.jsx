@@ -124,6 +124,9 @@ const TenantDetails = () => {
         <div className="bg-pink-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Alt Phone Number:</strong> 0{tenant?.altphone}
         </div>
+        <div className="bg-pink-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Alt Phone Number:</strong> 0{tenant?.altphonetwo}
+        </div>
         <div className="bg-orange-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Apartment Location:</strong> {tenant?.apartmentLocation}
         </div>
