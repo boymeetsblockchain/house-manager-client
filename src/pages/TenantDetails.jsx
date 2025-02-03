@@ -13,8 +13,8 @@ const TenantDetails = () => {
   const [countdownTime, setCountdownTime] = useState("N/A");
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newRentEnd, setNewRentEnd] = useState("");
-  const [newRentStart, setNewRentStart] = useState("");
+  const [rentEnd, setNewRentEnd] = useState("");
+  const [rentStart, setNewRentStart] = useState("");
   const [newAmount, setNewAmount] = useState("");
   const [newComment, setNewComment] = useState("");
   const navigate = useNavigate();
@@ -78,6 +78,30 @@ const TenantDetails = () => {
     }
   };
 
+  const handleDeletePayment = async (paymentId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this payment?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API}tenant/payment/${id}/${paymentId}`);
+
+      // Update UI by removing deleted payment
+      setTenant((prevTenant) => ({
+        ...prevTenant,
+        payments: prevTenant.payments.filter(
+          (payment) => payment._id !== paymentId
+        ),
+      }));
+
+      alert("Payment deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting payment:", error);
+      alert("Failed to delete payment.");
+    }
+  };
+
   useEffect(() => {
     const updateCountdownTime = () => {
       if (!tenant || !tenant.rent || !tenant.rent.rentend) {
@@ -124,10 +148,10 @@ const TenantDetails = () => {
 
       const response = await axios.put(`${API}tenant/${id}`, {
         comment: newComment,
-
         receiptUrl: imageUrl,
-
         amount: newAmount,
+        rentend: rentEnd,
+        rentstart: rentStart,
       });
       toast.success("Tenant updated");
       navigate("/tenant");
@@ -252,7 +276,7 @@ const TenantDetails = () => {
       </div>
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded-md shadow-md w-96">
+          <div className="bg-white p-6 rounded-md shadow-md w-100">
             <h2 className="text-xl font-bold">Renew Rent</h2>
 
             <label className="block mt-2">New Amount:</label>
@@ -269,7 +293,26 @@ const TenantDetails = () => {
               onChange={(e) => setNewComment(e.target.value)}
               className="border p-2 w-full"
             />
+            <label className="block mt-2">Rent Date Start</label>
+            <Input
+              name="rentstart"
+              label="Rent Start Date"
+              type="date"
+              className="my-2"
+              value={rentStart}
+              onChange={(e) => setNewRentStart(e.target.value)}
+            />
+            <label className="block mt-2">Rent Date End</label>
+            <Input
+              name="rentend"
+              label="Rent End Date"
+              type="date"
+              className="my-2"
+              value={rentEnd}
+              onChange={(e) => setNewRentEnd(e.target.value)}
+            />
             <label className="block mt-2">Receipt</label>
+
             <div className="flex space-x-4 mb-8">
               <Input type={"file"} onChange={handleFileChange} />
               <button
@@ -299,13 +342,10 @@ const TenantDetails = () => {
 
       {tenant?.payments?.length > 0 &&
         tenant?.payments?.map((data, index) => (
-          <div className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">payment {index + 1}</h2>
+          <div key={data._id} className="mt-6">
+            <h2 className="text-xl font-semibold mb-4">Payment {index + 1}</h2>
             <div className="space-y-4">
-              <div
-                key={data._id}
-                className="bg-white shadow-md rounded-lg p-4 border border-gray-200"
-              >
+              <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
                 <p className="text-gray-700">
                   <strong>Comment:</strong> {data.comment}
                 </p>
@@ -327,6 +367,14 @@ const TenantDetails = () => {
                 >
                   View Receipt
                 </a>
+
+                {/* Delete Button */}
+                <button
+                  onClick={() => handleDeletePayment(data._id)}
+                  className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           </div>
