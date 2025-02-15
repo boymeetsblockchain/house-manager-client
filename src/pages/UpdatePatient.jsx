@@ -55,8 +55,18 @@ const UpdateTenant = () => {
         return {
           ...prevFormData,
           rent: {
-            ...prevFormData.rent,
+            ...(prevFormData.rent || {}), // Ensure rent exists
             [name]: value,
+          },
+        };
+      }
+
+      if (name.startsWith("guarantor")) {
+        return {
+          ...prevFormData,
+          guarantor: {
+            ...(prevFormData.guarantor || {}), // Ensure guarantor exists
+            [name.replace("guarantor", "").toLowerCase()]: value, // Map input name properly
           },
         };
       }
@@ -225,22 +235,23 @@ const UpdateTenant = () => {
         <Input
           name="guarantorname"
           label="Guarantor Name"
-          value={formData?.guarantor?.guarantorname}
+          value={formData?.guarantor?.name || ""}
           onChange={handleChange}
         />
         <Input
           name="guarantoraddress"
           label="Guarantor Address"
-          value={formData?.guarantor?.guarantoraddress}
+          value={formData?.guarantor?.address || ""}
           onChange={handleChange}
         />
         <Input
           name="guarantornumber"
           label="Guarantor Number"
-          type={"number"}
-          value={formData?.guarantor?.guarantornumber}
+          type="number"
+          value={formData?.guarantor?.number || ""}
           onChange={handleChange}
         />
+
         <br />
         <h2 className="text-center font-bold text-3xl">Rent Details</h2>
         <div className="flex space-y-2 md:space-x-4 md:flex-row flex-col ">
