@@ -230,6 +230,9 @@ const TenantDetails = () => {
         <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Occupation:</strong> {tenant?.occupation}
         </div>
+        <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Caution Fee Amount Paid:</strong> {tenant?.cautionFeePaid}
+        </div>
         <div className="bg-red-200 p-6 md:col-span-2  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Employment Address:</strong> {tenant?.employadd}
         </div>
@@ -259,6 +262,10 @@ const TenantDetails = () => {
         <div className="bg-purple-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Guarantor Number:</strong> 0
           {tenant?.guarantor?.guarantornumber}
+        </div>
+        <div className="bg-yellow-200 p-6  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
+          <strong>Guarantor Relationship:</strong> 0
+          {tenant?.guarantor?.guarantorrelationship}
         </div>
         <div className="bg-pink-300 p-6 col-span-3  text-sm md:text-2xl rounded-md shadow-md hover:scale-90 cursor-pointer transition">
           <strong>Comment:</strong> {tenant?.comment}

@@ -55,6 +55,8 @@ const AddNewTenant = () => {
     guarantorname: "",
     guarantoraddress: "",
     guarantornumber: "",
+    guarantorrelationship: "",
+    cautionFeePaid: "",
     rentstart: "",
     rentend: "",
     apartmentLocation: "",
@@ -198,6 +200,13 @@ const AddNewTenant = () => {
             />
             <label htmlFor="cautionFee">Caution Fee</label>
           </div>
+          <Input
+            name="cautionFeePaid"
+            type={"number"}
+            label="Caution Fee Amount"
+            value={formData.cautionFeePaid}
+            onChange={handleChange}
+          />
         </div>
         <Select
           id="selectInput"
@@ -228,6 +237,12 @@ const AddNewTenant = () => {
           label="Guarantor Number"
           type={"number"}
           value={formData.guarantornumber}
+          onChange={handleChange}
+        />
+        <Input
+          name="guarantorrelationship"
+          label="Guarantor Relationship"
+          value={formData.guarantorrelationship}
           onChange={handleChange}
         />
         <br />
