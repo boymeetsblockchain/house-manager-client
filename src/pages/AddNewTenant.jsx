@@ -9,6 +9,7 @@ import { Loader } from "../components/Loader";
 
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { paymentOptions, paymentType } from "../data/payment";
+
 const AddNewTenant = () => {
   const navigate = useNavigate();
 
@@ -21,6 +22,7 @@ const AddNewTenant = () => {
     const file = e.target.files[0];
     setSelectedFile(file);
   };
+
   const uploadImageToFirebaseStorage = async () => {
     try {
       if (!selectedFile) {
@@ -57,6 +59,8 @@ const AddNewTenant = () => {
     guarantornumber: "",
     guarantorrelationship: "",
     cautionFeePaid: "",
+    cautionFeeComment: "",
+    cautionFeeDate: "",
     rentstart: "",
     rentend: "",
     apartmentLocation: "",
@@ -190,16 +194,23 @@ const AddNewTenant = () => {
             value={formData.employadd}
             onChange={handleChange}
           />
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="cautionFee"
-              name="cautionFee"
-              checked={formData.cautionFee}
-              onChange={handleCautionFeeChange}
-            />
-            <label htmlFor="cautionFee">Caution Fee</label>
-          </div>
+        </div>
+
+        <br />
+        <h2 className="text-center capitalize font-bold text-3xl">
+          Caution Fee Details
+        </h2>
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            id="cautionFee"
+            name="cautionFee"
+            checked={formData.cautionFee}
+            onChange={handleCautionFeeChange}
+          />
+          <label htmlFor="cautionFee">Caution Fee</label>
+        </div>
+        <div className="flex space-y-2 md:space-x-4 md:flex-row flex-col">
           <Input
             name="cautionFeePaid"
             type={"number"}
@@ -207,7 +218,21 @@ const AddNewTenant = () => {
             value={formData.cautionFeePaid}
             onChange={handleChange}
           />
+          <Input
+            name="cautionFeeDate"
+            type={"date"}
+            label="Caution Fee Date"
+            value={formData.cautionFeeDate}
+            onChange={handleChange}
+          />
         </div>
+        <Input
+          name="cautionFeeComment"
+          label="Caution Fee Comment"
+          value={formData.cautionFeeComment}
+          onChange={handleChange}
+        />
+
         <Select
           id="selectInput"
           name={"paymentmethod"}

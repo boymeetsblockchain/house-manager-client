@@ -8,11 +8,13 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import Input from "../components/Input";
+
 const TenantDetails = () => {
   const [tenant, setTenant] = useState(null);
   const [countdownTime, setCountdownTime] = useState("N/A");
   const { id } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUtilityModalOpen, setIsUtilityModalOpen] = useState(false);
   const [rentEnd, setNewRentEnd] = useState("");
   const [rentStart, setNewRentStart] = useState("");
   const [newAmount, setNewAmount] = useState("");
@@ -22,10 +24,16 @@ const TenantDetails = () => {
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Utility form states
+  const [utilityName, setUtilityName] = useState("");
+  const [utilityAmount, setUtilityAmount] = useState("");
+  const [utilityDate, setUtilityDate] = useState("");
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
   };
+
   const uploadImageToFirebaseStorage = async () => {
     try {
       if (!selectedFile) {
@@ -87,7 +95,6 @@ const TenantDetails = () => {
     try {
       await axios.delete(`${API}tenant/payment/${id}/${paymentId}`);
 
-      // Update UI by removing deleted payment
       setTenant((prevTenant) => ({
         ...prevTenant,
         payments: prevTenant.payments.filter(
@@ -95,10 +102,58 @@ const TenantDetails = () => {
         ),
       }));
 
-      alert("Payment deleted successfully!");
+      toast.success("Payment deleted successfully!");
     } catch (error) {
       console.error("Error deleting payment:", error);
-      alert("Failed to delete payment.");
+      toast.error("Failed to delete payment.");
+    }
+  };
+
+  const handleDeleteUtility = async (utilityId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this utility payment?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${API}tenant/utility/${id}/${utilityId}`);
+
+      setTenant((prevTenant) => ({
+        ...prevTenant,
+        utilities: prevTenant.utilities.filter(
+          (utility) => utility._id !== utilityId
+        ),
+      }));
+
+      toast.success("Utility payment deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting utility:", error);
+      toast.error("Failed to delete utility payment.");
+    }
+  };
+
+  const addUtilityPayment = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      const response = await axios.post(`${API}tenant/utility/${id}`, {
+        name: utilityName,
+        amountPaid: utilityAmount,
+        datePaid: utilityDate,
+      });
+
+      setTenant(response.data.data);
+      toast.success("Utility payment added successfully!");
+      setIsUtilityModalOpen(false);
+      setUtilityName("");
+      setUtilityAmount("");
+      setUtilityDate("");
+    } catch (error) {
+      console.error("Error adding utility:", error);
+      toast.error("Failed to add utility payment.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -113,12 +168,10 @@ const TenantDetails = () => {
       const currentDate = new Date().getTime();
 
       if (currentDate >= rentDueDate) {
-        // Rent has expired
         setCountdownTime("Rent Expired");
       } else {
         const timeDifference = rentDueDate - currentDate;
 
-        // Calculate days, hours, minutes, and seconds
         const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
         const hours = Math.floor(
           (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -132,14 +185,13 @@ const TenantDetails = () => {
       }
     };
 
-    // Usage example
     updateCountdownTime();
 
     const intervalId = setInterval(updateCountdownTime, 1000);
 
-    // Cleanup the interval on component unmount
     return () => clearInterval(intervalId);
   }, [tenant]);
+
   const renewRent = async (e) => {
     e.preventDefault();
 
@@ -162,6 +214,7 @@ const TenantDetails = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="mx-auto max-w-screen-xl text-gray-900 h-full w-full px-4 py-12 md:px-8 lg:px-12">
       <div className="flex justify-start items-center mt-4  ">
@@ -201,6 +254,12 @@ const TenantDetails = () => {
             onClick={() => setIsModalOpen(true)}
           >
             Renew Rent
+          </button>
+          <button
+            className="bg-purple-500 py-3 px-2 rounded-md text-xs text-nowrap text-white"
+            onClick={() => setIsUtilityModalOpen(true)}
+          >
+            Add Utility
           </button>
         </div>
       </div>
@@ -281,8 +340,10 @@ const TenantDetails = () => {
           className="object-contain max-w-xl "
         />
       </div>
+
+      {/* Renew Rent Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-md shadow-md w-100">
             <h2 className="text-xl font-bold">Renew Rent</h2>
 
@@ -347,11 +408,100 @@ const TenantDetails = () => {
         </div>
       )}
 
-      {tenant?.payments?.length > 0 &&
-        tenant?.payments?.map((data, index) => (
-          <div key={data._id} className="mt-6">
-            <h2 className="text-xl font-semibold mb-4">Payment {index + 1}</h2>
-            <div className="space-y-4">
+      {/* Add Utility Modal */}
+      {isUtilityModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-md shadow-md w-100">
+            <h2 className="text-xl font-bold">Add Utility Payment</h2>
+
+            <label className="block mt-2">Utility Name:</label>
+            <Input
+              type="text"
+              placeholder="e.g., Electricity, Water, Internet"
+              value={utilityName}
+              onChange={(e) => setUtilityName(e.target.value)}
+              className="border p-2 w-full"
+            />
+
+            <label className="block mt-2">Amount Paid:</label>
+            <Input
+              type="number"
+              value={utilityAmount}
+              onChange={(e) => setUtilityAmount(e.target.value)}
+              className="border p-2 w-full"
+            />
+
+            <label className="block mt-2">Date Paid:</label>
+            <Input
+              type="date"
+              value={utilityDate}
+              onChange={(e) => setUtilityDate(e.target.value)}
+              className="border p-2 w-full"
+            />
+
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={() => setIsUtilityModalOpen(false)}
+                className="bg-gray-500 px-4 py-2 text-white rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={addUtilityPayment}
+                className="bg-purple-500 px-4 py-2 text-white rounded-md"
+              >
+                {loading ? "Adding..." : "Add Utility"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Utilities Section */}
+      {tenant?.utilities?.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Utility Payments</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {tenant.utilities.map((utility, index) => (
+              <div
+                key={utility._id}
+                className="bg-gradient-to-br from-purple-100 to-purple-200 shadow-md rounded-lg p-4 border border-purple-300"
+              >
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-purple-900">
+                      {utility.name}
+                    </h3>
+                    <p className="text-gray-700 mt-2">
+                      <strong>Amount:</strong> &#8358;{utility.amountPaid}
+                    </p>
+                    <p className="text-gray-700">
+                      <strong>Date:</strong>{" "}
+                      {new Date(utility.datePaid).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => handleDeleteUtility(utility._id)}
+                    className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-700 transition text-sm ml-2"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Payments Section */}
+      {tenant?.payments?.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Payment History</h2>
+          {tenant.payments.map((data, index) => (
+            <div key={data._id} className="mb-4">
+              <h3 className="text-xl font-semibold mb-2">
+                Payment {index + 1}
+              </h3>
               <div className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
                 <p className="text-gray-700">
                   <strong>Comment:</strong> {data.comment}
@@ -375,7 +525,6 @@ const TenantDetails = () => {
                   View Receipt
                 </a>
 
-                {/* Delete Button */}
                 <button
                   onClick={() => handleDeletePayment(data._id)}
                   className="mt-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700 transition"
@@ -384,8 +533,9 @@ const TenantDetails = () => {
                 </button>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
+      )}
     </div>
   );
 };
